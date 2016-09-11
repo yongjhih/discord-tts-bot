@@ -33,6 +33,8 @@ from . import downloader
 from .opus_loader import load_opus_lib
 from .constants import VERSION as BOTVERSION
 from .constants import DISCORD_MSG_CHAR_LIMIT, AUDIO_CACHE_PATH
+from tempfile import TemporaryFile
+from gtts import gTTS
 
 
 load_opus_lib()
@@ -1731,6 +1733,18 @@ class MusicBot(discord.Client):
         await self.send_message(author, '\n'.join(lines))
         return Response(":mailbox_with_mail:", delete_after=20)
 
+    async def cmd_tw(self, player, leftover_args, msg):
+        self.safe_print("[cmd_tw]")
+        msg = ' '.join([msg, *leftover_args])
+        self.safe_print("[cmd_tw] {}".format(msg))
+        try:
+            tts = gTTS(text=msg, lang='zh-tw')
+            tts.save("hello.mp3")
+            player.playFile(f="hello.mp3")
+        except Exception as e:
+            self.safe_print("[cmd_tw] {}".format(e))
+
+        return Response(":ok_hand: %s : %s" % (msg, f), reply=True, delete_after=20)
 
     @owner_only
     async def cmd_setname(self, leftover_args, name):
