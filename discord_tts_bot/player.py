@@ -167,7 +167,7 @@ class MusicPlayer(EventEmitter):
 
         return False
 
-    def playFile(self, _continue=False):
+    def playFile(self, f, _continue=False):
         self.loop.create_task(self._playFile(f, _continue=_continue))
 
     async def _playFile(self, f, _continue=False):

@@ -695,21 +695,53 @@ class MusicBot(discord.Client):
         await self.send_message(author, '\n'.join(lines))
         return Response(":mailbox_with_mail:", delete_after=20)
 
-    def cmd_tw(self, player, leftover_args, msg):
+    async def cmd_tw(self, player, leftover_args, msg):
         self.safe_print("[cmd_tw]")
         msg = ' '.join([msg, *leftover_args])
         self.safe_print("[cmd_tw] {}".format(msg))
         try:
             tts = gTTS(text=msg, lang='zh-tw')
 
-            tts.save("hello.mp3")
-            player.playFile(f="hello.mp3")
+            tts.save("tw.mp3")
+            player.playFile(f="tw.mp3")
             #f = TemporaryFile()
             #tts.write_to_fp(f)
             #f.close()
             #player.playFile(f=f)
         except Exception as e:
             self.safe_print("[cmd_tw] {}".format(e))
+
+        return Response(":ok_hand: %s : %s" % (msg, f), reply=True, delete_after=20)
+
+    async def cmd_kr(self, player, leftover_args, msg):
+        msg = ' '.join([msg, *leftover_args])
+        try:
+            tts = gTTS(text=msg, lang='ko')
+
+            tts.save("kr.mp3")
+            player.playFile(f="kr.mp3")
+            #f = TemporaryFile()
+            #tts.write_to_fp(f)
+            #f.close()
+            #player.playFile(f=f)
+        except Exception as e:
+            self.safe_print("[cmd_kr] {}".format(e))
+
+        return Response(":ok_hand: %s : %s" % (msg, f), reply=True, delete_after=20)
+
+    async def cmd_jp(self, player, leftover_args, msg):
+        msg = ' '.join([msg, *leftover_args])
+        try:
+            tts = gTTS(text=msg, lang='ja')
+
+            tts.save("jp.mp3")
+            player.playFile(f="jp.mp3")
+            #f = TemporaryFile()
+            #tts.write_to_fp(f)
+            #f.close()
+            #player.playFile(f=f)
+        except Exception as e:
+            self.safe_print("[cmd_jp] {}".format(e))
 
         return Response(":ok_hand: %s : %s" % (msg, f), reply=True, delete_after=20)
 
