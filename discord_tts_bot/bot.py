@@ -152,9 +152,11 @@ class MusicBot(discord.Client):
                 try:
                     player = await self.get_player(channel, create=True)
 
-                    auto_play = False
-                    if player.is_stopped and auto_play:
-                        player.play()
+                    print("_autojoin_channels: player: %s" % player)
+
+                    #auto_play = False
+                    #if player.is_stopped and auto_play:
+                    #    player.play()
 
                     joined_servers.append(channel.server)
                 except Exception as e:
@@ -338,8 +340,10 @@ class MusicBot(discord.Client):
                     'Use %ssummon to summon it to your voice channel.' % self.config.command_prefix)
 
             voice_client = await self.get_voice_client(channel)
+            print("get_player: voice_client: %s" % voice_client)
 
             player = MusicPlayer(self, voice_client)
+            print("get_player: player: %s" % player)
 
             player.skip_state = SkipState()
             self.players[server.id] = player

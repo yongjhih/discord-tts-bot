@@ -87,18 +87,15 @@ class MusicPlayerState(Enum):
 
 
 class MusicPlayer(EventEmitter):
-    def __init__(self, bot, voice_client, playlist):
+    def __init__(self, bot, voice_client):
         super().__init__()
         self.bot = bot
         self.loop = bot.loop
         self.voice_client = voice_client
-        self.playlist = playlist
-        self.playlist.on('entry-added', self.on_entry_added)
         self._volume = bot.config.default_volume
 
         self._play_lock = asyncio.Lock()
         self._current_player = None
-        self._current_entry = None
         self.state = MusicPlayerState.STOPPED
 
         self.loop.create_task(self.websocket_check())
@@ -113,10 +110,6 @@ class MusicPlayer(EventEmitter):
         if self._current_player:
             self._current_player.buff.volume = value
 
-    def on_entry_added(self, playlist, entry):
-        if self.is_stopped:
-            self.loop.call_later(2, self.play)
-
     def skip(self):
         self._kill_current_player()
 
@@ -130,7 +123,7 @@ class MusicPlayer(EventEmitter):
         if self.is_paused and self._current_player:
             self._current_player.resume()
             self.state = MusicPlayerState.PLAYING
-            self.emit('resume', player=self, entry=self.current_entry)
+            self.emit('resume', player=self)
             return
 
         if self.is_paused and not self._current_player:
@@ -147,7 +140,7 @@ class MusicPlayer(EventEmitter):
             if self._current_player:
                 self._current_player.pause()
 
-            self.emit('pause', player=self, entry=self.current_entry)
+            self.emit('pause', player=self)
             return
 
         elif self.is_paused:
@@ -157,31 +150,8 @@ class MusicPlayer(EventEmitter):
 
     def kill(self):
         self.state = MusicPlayerState.DEAD
-        self.playlist.clear()
         self._events.clear()
         self._kill_current_player()
-
-    def _playback_finished(self):
-        entry = self._current_entry
-
-        if self._current_player:
-            self._current_player.after = None
-            self._kill_current_player()
-
-        self._current_entry = None
-
-        if not self.is_stopped and not self.is_dead:
-            self.play(_continue=True)
-
-        if not self.bot.config.save_videos and entry:
-            if any([entry.filename == e.filename for e in self.playlist.entries]):
-                print("[Config:SaveVideos] Skipping deletion, found song in queue")
-
-            else:
-                # print("[Config:SaveVideos] Deleting file: %s" % os.path.relpath(entry.filename))
-                asyncio.ensure_future(self._delete_file(entry.filename))
-
-        self.emit('finished-playing', player=self, entry=entry)
 
     def _kill_current_player(self):
         if self._current_player:
@@ -196,75 +166,6 @@ class MusicPlayer(EventEmitter):
             return True
 
         return False
-
-    async def _delete_file(self, filename):
-        for x in range(30):
-            try:
-                os.unlink(filename)
-                break
-
-            except PermissionError as e:
-                if e.winerror == 32:  # File is in use
-                    await asyncio.sleep(0.25)
-
-            except Exception as e:
-                traceback.print_exc()
-                print("Error trying to delete " + filename)
-                break
-        else:
-            print("[Config:SaveVideos] Could not delete file {}, giving up and moving on".format(
-                os.path.relpath(filename)))
-
-    def play(self, _continue=False):
-        self.loop.create_task(self._play(_continue=_continue))
-
-    async def _play(self, _continue=False):
-        """
-            Plays the next entry from the playlist, or resumes playback of the current entry if paused.
-        """
-        if self.is_paused:
-            return self.resume()
-
-        if self.is_dead:
-            return
-
-        with await self._play_lock:
-            if self.is_stopped or _continue:
-                try:
-                    entry = await self.playlist.get_next_entry()
-
-                except Exception as e:
-                    print("Failed to get entry.")
-                    traceback.print_exc()
-                    # Retry playing the next entry in a sec.
-                    self.loop.call_later(0.1, self.play)
-                    return
-
-                # If nothing left to play, transition to the stopped state.
-                if not entry:
-                    self.stop()
-                    return
-
-                # In-case there was a player, kill it. RIP.
-                self._kill_current_player()
-
-                self._current_player = self._monkeypatch_player(self.voice_client.create_ffmpeg_player(
-                    entry.filename,
-                    before_options="-nostdin",
-                    options="-vn -b:a 192k",
-                    # Threadsafe call soon, b/c after will be called from the voice playback thread.
-                    after=lambda: self.loop.call_soon_threadsafe(self._playback_finished)
-                ))
-                self._current_player.setDaemon(True)
-                self._current_player.buff.volume = self.volume
-
-                # I need to add ytdl hooks
-                self.state = MusicPlayerState.PLAYING
-                self._current_entry = entry
-
-                self._current_player.start()
-                self.emit('play', player=self, entry=entry)
-
 
     def playFile(self, f, _continue=False):
         player = self._monkeypatch_player(self.voice_client.create_ffmpeg_player(
@@ -301,10 +202,6 @@ class MusicPlayer(EventEmitter):
                 await asyncio.sleep(4)
             finally:
                 await asyncio.sleep(1)
-
-    @property
-    def current_entry(self):
-        return self._current_entry
 
     @property
     def is_playing(self):
