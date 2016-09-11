@@ -1,5 +1,23 @@
 # TTS bot for Discord.
 
+## Usage
+
+```
+!tw 87 機器人 94 狂
+```
+
+```
+!en hello world!
+```
+
+```
+!kr 오빠
+```
+
+```
+!jp かわいいです
+```
+
 ## Docker
 
 * Create discordapp bot, and get bot token
