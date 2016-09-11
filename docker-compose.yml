@@ -1,5 +1,5 @@
 discord-tts-bot:
-    build: .
+    image: discord-tts-bot
     volumes:
         - ./config:/discord_tts_bot/config
     restart: always
