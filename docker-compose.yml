@@ -1,5 +1,5 @@
-discord-tts:
+discord-tts-bot:
     build: .
     volumes:
-        - ./config:/musicBot/config
+        - ./config:/discord_tts_bot/config
     restart: always

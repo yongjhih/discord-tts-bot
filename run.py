@@ -109,7 +109,7 @@ def main():
 
         pycom = None
 
-        # Maybe I should check for if the current dir is the musicbot folder, just in case
+        # Maybe I should check for if the current dir is the discord_tts_bot folder, just in case
 
         if sys.platform.startswith('win'):
             try:
@@ -159,7 +159,7 @@ def main():
 
         m = None
         try:
-            from musicbot import MusicBot
+            from discord_tts_bot import MusicBot
             m = MusicBot()
             print("Connecting...", end='', flush=True)
             m.run()
@@ -190,7 +190,7 @@ def main():
                 break
 
         except Exception as e:
-            if hasattr(e, '__module__') and e.__module__ == 'musicbot.exceptions':
+            if hasattr(e, '__module__') and e.__module__ == 'discord_tts_bot.exceptions':
                 if e.__class__.__name__ == 'HelpfulError':
                     print(e.message)
                     break

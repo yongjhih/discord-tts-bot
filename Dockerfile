@@ -19,14 +19,13 @@ RUN sudo apt-get install wget \
     && wget https://bootstrap.pypa.io/get-pip.py \
     && sudo python3.5 get-pip.py
 
-#Add musicBot
-ADD . /musicBot
-WORKDIR /musicBot
+ADD . /discord_tts_bot
+WORKDIR /discord_tts_bot
 
 #Install PIP dependencies
 RUN sudo pip install -r requirements.txt
 
 #Add volume for configuration
-VOLUME /musicBot/config
+VOLUME /discord_tts_bot/config
 
 CMD python3.5 run.py
