@@ -701,8 +701,13 @@ class MusicBot(discord.Client):
         self.safe_print("[cmd_tw] {}".format(msg))
         try:
             tts = gTTS(text=msg, lang='zh-tw')
+
             tts.save("hello.mp3")
             player.playFile(f="hello.mp3")
+            #f = TemporaryFile()
+            #tts.write_to_fp(f)
+            #f.close()
+            #player.playFile(f=f)
         except Exception as e:
             self.safe_print("[cmd_tw] {}".format(e))
 
