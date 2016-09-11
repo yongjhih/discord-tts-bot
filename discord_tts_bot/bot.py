@@ -711,7 +711,7 @@ class MusicBot(discord.Client):
         except Exception as e:
             self.safe_print("[cmd_tw] {}".format(e))
 
-        return Response(":ok_hand: %s : %s" % (msg, f), reply=True, delete_after=20)
+        return Response(":ok_hand: %s" % (msg), reply=True, delete_after=20)
 
     async def cmd_kr(self, player, leftover_args, msg):
         msg = ' '.join([msg, *leftover_args])
@@ -727,7 +727,7 @@ class MusicBot(discord.Client):
         except Exception as e:
             self.safe_print("[cmd_kr] {}".format(e))
 
-        return Response(":ok_hand: %s : %s" % (msg, f), reply=True, delete_after=20)
+        return Response(":ok_hand: %s" % (msg), reply=True, delete_after=20)
 
     async def cmd_jp(self, player, leftover_args, msg):
         msg = ' '.join([msg, *leftover_args])
@@ -743,7 +743,7 @@ class MusicBot(discord.Client):
         except Exception as e:
             self.safe_print("[cmd_jp] {}".format(e))
 
-        return Response(":ok_hand: %s : %s" % (msg, f), reply=True, delete_after=20)
+        return Response(":ok_hand: %s" % (msg), reply=True, delete_after=20)
 
     @owner_only
     async def cmd_tts_setname(self, leftover_args, name):

@@ -181,7 +181,7 @@ class MusicPlayer(EventEmitter):
             player.buff.volume = self.volume
             player.start()
             #self.loop.call_later(0.1, self.play)
-            self.emit('play', player=self, entry=entry)
+            self.emit('play', player=self)
 
     def _monkeypatch_player(self, player):
         original_buff = player.buff
