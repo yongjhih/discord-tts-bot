@@ -2,6 +2,18 @@
 
 MusicBot is a Discord music bot written in [Python](https://www.python.org "Python homepage"). It plays requested songs and if the queue becomes empty it will play through a list of existing songs.
 
+## Docker
+
+* Create discordapp bot, and get bot token
+* Config `config/options.ini` by `config/example_options.ini`
+* `docker run -it -v $(pwd)/config:/musicBot/config yongjhih/musicbot`
+
+or
+
+```sh
+curl https://github.com/yongjhih/docker-MusicBot/raw/master/docker-compose.yml | docker-compose -f - up musicbot
+```
+
 ### How do I set it up?
 
 [CLICK HERE](https://github.com/SexualRhinoceros/MusicBot/wiki) to find the guide that suites your operating system.
