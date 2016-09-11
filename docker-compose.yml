@@ -1,0 +1,4 @@
+musicbot:
+    image: yongjhih/musicbot
+    volumes:
+        - ./config:/musicBot/config
