@@ -711,6 +711,20 @@ class MusicBot(discord.Client):
         except Exception as e:
             self.safe_print("[cmd_tw] {}".format(e))
 
+    async def cmd_en(self, player, leftover_args, msg):
+        msg = ' '.join([msg, *leftover_args])
+        try:
+            tts = gTTS(text=msg, lang='en-us')
+
+            tts.save("en.mp3")
+            player.playFile(f="en.mp3")
+            #f = TemporaryFile()
+            #tts.write_to_fp(f)
+            #f.close()
+            #player.playFile(f=f)
+        except Exception as e:
+            self.safe_print("[cmd_en] {}".format(e))
+
     async def cmd_kr(self, player, leftover_args, msg):
         msg = ' '.join([msg, *leftover_args])
         try:
