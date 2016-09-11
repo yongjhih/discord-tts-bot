@@ -267,17 +267,15 @@ class MusicPlayer(EventEmitter):
 
 
     def playFile(self, f, _continue=False):
-        self.loop.create_task(self._playFile(f, _continue=_continue))
-
-    async def _playFile(self, f, _continue=False):
         player = self._monkeypatch_player(self.voice_client.create_ffmpeg_player(
             f
         ))
         player.setDaemon(True)
         player.buff.volume = self.volume
 
+        if self.is_playing: self.pause()
         player.start()
-        self.emit('playFile', player=self)
+        self.resume()
 
     def _monkeypatch_player(self, player):
         original_buff = player.buff

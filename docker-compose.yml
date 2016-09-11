@@ -1,4 +1,5 @@
-musicbot:
-    image: yongjhih/musicbot
+discord-tts:
+    build: .
     volumes:
         - ./config:/musicBot/config
+    restart: always

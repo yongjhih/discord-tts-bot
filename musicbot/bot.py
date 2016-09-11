@@ -175,7 +175,8 @@ class MusicBot(discord.Client):
                 try:
                     player = await self.get_player(channel, create=True)
 
-                    if player.is_stopped:
+                    auto_play = False
+                    if player.is_stopped and auto_play:
                         player.play()
 
                     if self.config.auto_playlist:
@@ -1733,7 +1734,7 @@ class MusicBot(discord.Client):
         await self.send_message(author, '\n'.join(lines))
         return Response(":mailbox_with_mail:", delete_after=20)
 
-    async def cmd_tw(self, player, leftover_args, msg):
+    def cmd_tw(self, player, leftover_args, msg):
         self.safe_print("[cmd_tw]")
         msg = ' '.join([msg, *leftover_args])
         self.safe_print("[cmd_tw] {}".format(msg))
