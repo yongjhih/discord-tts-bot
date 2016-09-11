@@ -272,10 +272,7 @@ class MusicPlayer(EventEmitter):
         ))
         player.setDaemon(True)
         player.buff.volume = self.volume
-
-        if self.is_playing: self.pause()
         player.start()
-        self.resume()
 
     def _monkeypatch_player(self, player):
         original_buff = player.buff
