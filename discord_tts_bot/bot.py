@@ -22,14 +22,12 @@ from datetime import timedelta
 from random import choice, shuffle
 from collections import defaultdict
 
-from discord_tts_bot.playlist import Playlist
 from discord_tts_bot.player import MusicPlayer
 from discord_tts_bot.config import Config, ConfigDefaults
 from discord_tts_bot.permissions import Permissions, PermissionsDefaults
 from discord_tts_bot.utils import load_file, write_file, sane_round_int
 
 from . import exceptions
-from . import downloader
 from .opus_loader import load_opus_lib
 from .constants import VERSION as BOTVERSION
 from .constants import DISCORD_MSG_CHAR_LIMIT, AUDIO_CACHE_PATH
@@ -571,7 +569,6 @@ class MusicBot(discord.Client):
         if self.config.delete_messages:
             print("    Delete Invoking: " + ['Disabled', 'Enabled'][self.config.delete_invoking])
         print("  Debug Mode: " + ['Disabled', 'Enabled'][self.config.debug_mode])
-        print("  Downloaded songs will be %s" % ['deleted', 'saved'][self.config.save_videos])
         print()
 
         # maybe option to leave the ownerid blank and generate a random command for the owner to use
